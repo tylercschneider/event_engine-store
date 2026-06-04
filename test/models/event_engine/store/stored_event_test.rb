@@ -8,6 +8,12 @@ module EventEngine
 
         assert stored.persisted?
       end
+
+      test "cannot be updated once recorded" do
+        stored = StoredEvent.create!(event_name: "order_placed", occurred_at: Time.current)
+
+        assert_raises(ActiveRecord::ReadOnlyRecord) { stored.update!(event_version: 9) }
+      end
     end
   end
 end
