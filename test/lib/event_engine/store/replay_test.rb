@@ -47,6 +47,12 @@ module EventEngine
           events.first.to_h.except(:occurred_at)
         )
       end
+
+      test "returns an enumerator when no block is given" do
+        StoredEvent.create!(event_name: "a", occurred_at: Time.current)
+
+        assert_kind_of Enumerator, Replay.each
+      end
     end
   end
 end
