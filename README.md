@@ -25,8 +25,10 @@ $ bundle
 ## Status
 
 MVP working: the append-only `StoredEvent` record, a `Recorder` handler that
-records every dispatched event, and `Replay` (reconstruct events from the log in
-append order). Projection subscribers are the next addition.
+records every dispatched event, `Replay` (reconstruct events from the log in
+append order), and **projections** — register a read model with
+`EventEngine::Store.register_projection`; it's applied each event live, and can be
+rebuilt from scratch with `EventEngine::Store.rebuild(projection)`.
 
 ## License
 

@@ -6,6 +6,7 @@ module EventEngine
       initializer "event_engine.store.register_recorder" do
         config.after_initialize do
           EventEngine.register_handler(Recorder.new, levels: :all)
+          EventEngine.register_handler(ProjectionDispatcher.new, levels: :all)
         end
       end
     end
