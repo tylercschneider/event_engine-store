@@ -24,7 +24,9 @@ $ bundle
 
 ## Status
 
-Early development — building the append-only record and the recording handler.
+MVP working: the append-only `StoredEvent` record, a `Recorder` handler that
+records every dispatched event, and `Replay` (reconstruct events from the log in
+append order). Projection subscribers are the next addition.
 
 ## License
 
