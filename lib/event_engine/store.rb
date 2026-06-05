@@ -18,6 +18,10 @@ module EventEngine
       def reset_projections!
         projections.clear
       end
+
+      def rebuild(projection)
+        Replay.each { |event| projection.apply(event) }
+      end
     end
   end
 end

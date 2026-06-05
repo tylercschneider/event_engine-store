@@ -29,6 +29,16 @@ module EventEngine
 
         assert_equal [ :order_placed ], projection.applied
       end
+
+      test "rebuilds a projection by replaying the stored log" do
+        StoredEvent.create!(event_name: "a", occurred_at: Time.current)
+        StoredEvent.create!(event_name: "b", occurred_at: Time.current)
+        projection = CollectingProjection.new
+
+        EventEngine::Store.rebuild(projection)
+
+        assert_equal [ "a", "b" ], projection.applied
+      end
     end
   end
 end
