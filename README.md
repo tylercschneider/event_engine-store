@@ -37,7 +37,6 @@ The two are complementary; you can run both at once.
   - [Making recording resilient / async](#making-recording-resilient--async)
 - [Replay](#replay)
 - [Projections](#projections)
-- [Gaps & fragile assumptions](#gaps--fragile-assumptions)
 - [License](#license)
 
 ---
@@ -176,10 +175,9 @@ JSON on every query.
 - **Foreign keys / constraints** to enforce integrity against other tables.
 - **Partitioning / retention** by a real column (e.g. `tenant_id`, `created_at`).
 
-**The catch:** adding a column is *two* steps. The migration adds the column, but the
-`Recorder` writes a **hardcoded list of attributes** — it won't populate columns it
-doesn't know about, so new columns silently stay `NULL` until you also teach the
-recorder to fill them.
+Adding a column is **two** steps: a migration adds the column, and you extend the
+`Recorder` to populate it (the recorder writes a fixed set of attributes, so a new
+column stays `NULL` until the recorder fills it).
 
 **Step 1 — migration** (use a timestamp *after* the gem's `20260605000001`):
 
@@ -240,10 +238,10 @@ Now emit with the context in `metadata` and it lands in real columns:
 EventEngine.order_placed(order: order, metadata: { actor_id: current_user.id, tenant_id: tenant.id })
 ```
 
-> **Upgrade caution:** re-opening `Recorder#call` replaces it. If a future gem version
-> changes the default capture (e.g. adds an envelope field), your override won't pick
-> it up. Pin the gem version, or prefer the *prepend* form below which lets you read
-> the inserted record and patch your columns without re-listing the defaults:
+> **Tip — an upgrade-resilient alternative.** Re-opening `Recorder#call` replaces it,
+> so it won't pick up changes to the default capture in a future gem version. If you'd
+> rather not re-list the defaults, `prepend` a module that lets the gem do its insert
+> and then patches your columns on the returned record:
 >
 > ```ruby
 > module CaptureContext
@@ -405,45 +403,10 @@ API: `register_projection(p)`, `projections`, `reset_projections!`, `rebuild(p)`
 search indexes) that you can always recompute from the authoritative log — the core
 event-sourcing payoff.
 
-> **Caution:** projections run **synchronously inside dispatch**. If a projection's
+> **Note:** projections run **synchronously inside dispatch**. If a projection's
 > `apply` raises, it propagates and can break event emission (and stops later
 > handlers). Keep `apply` fast and defensive; for heavy work, have `apply` enqueue a
 > job instead of doing the work inline.
-
----
-
-## Gaps & fragile assumptions
-
-Real rough edges found while documenting. **(Call-outs, not yet fixed in code.)**
-
-1. **Adding columns requires patching the recorder.** The default `Recorder` writes a
-   hardcoded attribute list; new columns stay `NULL` until you extend it (see
-   [Expanding the table](#expanding-the-table-with-your-own-columns)). And re-opening
-   `#call` can drift from the gem's default capture across upgrades — prefer the
-   `prepend` + `update_columns` pattern.
-
-2. **`idempotency_key` is indexed but not unique.** The store does **not** deduplicate
-   — emitting "the same" event twice writes two rows. Dedup is the delivery layer's /
-   consumer's job; the store is a faithful record of what was dispatched.
-
-3. **Recording is synchronous and unguarded.** A DB failure during `Recorder#call`
-   raises into the emitting code. Use the [resilient wrapper](#making-recording-resilient--async)
-   if recording must not break emission.
-
-4. **Records every level, including non-durable 1 & 2.** Intentional, but surprising
-   if you expected only "important" events. Filter if needed.
-
-5. **No config, generator, or rake tasks.** Customization is via initializers
-   (re-open/prepend), migrations, and handler registration — there's no
-   `EventEngine::Store.configure`. The table name and model class are effectively
-   fixed.
-
-6. **Projections share the dispatch thread.** A slow or raising projection degrades or
-   breaks emission. There's no isolation, ordering guarantee between projections, or
-   built-in async path.
-
-7. **Unpinned core dependency.** The gemspec declares `add_dependency "event_engine"`
-   with no version constraint.
 
 ---
 
