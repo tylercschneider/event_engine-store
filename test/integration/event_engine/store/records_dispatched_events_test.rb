@@ -5,7 +5,7 @@ module EventEngine
     class RecordsDispatchedEventsTest < ActiveSupport::TestCase
       test "records an event dispatched through EventEngine" do
         EventEngine.dispatch(
-          EventEngine::Event.new(event_name: :order_placed, event_level: 3, payload: {}, occurred_at: Time.current)
+          EventEngine::Event.new(event_name: :order_placed, process_type: :durable, payload: {}, occurred_at: Time.current)
         )
 
         assert_equal 1, StoredEvent.count
