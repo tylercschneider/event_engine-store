@@ -24,7 +24,7 @@ module EventEngine
         EventEngine::Store.register_projection(projection)
 
         EventEngine.dispatch(
-          EventEngine::Event.new(event_name: :order_placed, event_level: 3, payload: {}, occurred_at: Time.current)
+          EventEngine::Event.new(event_name: :order_placed, process_type: :durable, payload: {}, occurred_at: Time.current)
         )
 
         assert_equal [ :order_placed ], projection.applied

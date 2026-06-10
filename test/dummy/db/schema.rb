@@ -16,7 +16,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_000001) do
     t.string "aggregate_type"
     t.integer "aggregate_version"
     t.datetime "created_at", null: false
-    t.integer "event_level"
     t.string "event_name", null: false
     t.string "event_type"
     t.integer "event_version"
@@ -24,6 +23,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_000001) do
     t.json "metadata"
     t.datetime "occurred_at"
     t.json "payload"
+    t.string "process_type"
     t.index ["event_name"], name: "index_event_engine_store_stored_events_on_event_name"
     t.index ["idempotency_key"], name: "index_event_engine_store_stored_events_on_idempotency_key"
     t.index ["occurred_at"], name: "index_event_engine_store_stored_events_on_occurred_at"

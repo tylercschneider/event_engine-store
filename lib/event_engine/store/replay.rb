@@ -9,7 +9,7 @@ module EventEngine
             event_name: stored.event_name,
             event_type: stored.event_type,
             event_version: stored.event_version,
-            event_level: stored.event_level,
+            process_type: stored.process_type,
             payload: stored.payload,
             metadata: stored.metadata,
             occurred_at: stored.occurred_at,

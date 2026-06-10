@@ -4,7 +4,7 @@ class CreateEventEngineStoreStoredEvents < ActiveRecord::Migration[8.1]
       t.string :event_name, null: false
       t.string :event_type
       t.integer :event_version
-      t.integer :event_level
+      t.string :process_type
       t.json :payload
       t.json :metadata
       t.datetime :occurred_at

@@ -4,7 +4,7 @@ module EventEngine
   module Store
     class RecorderTest < ActiveSupport::TestCase
       test "records a dispatched event into the store" do
-        event = EventEngine::Event.new(event_name: :order_placed, event_level: 3, payload: { "total" => 99 }, occurred_at: Time.current)
+        event = EventEngine::Event.new(event_name: :order_placed, process_type: :durable, payload: { "total" => 99 }, occurred_at: Time.current)
 
         Recorder.new.call(event)
 
@@ -16,7 +16,7 @@ module EventEngine
           event_name: :order_placed,
           event_type: :domain,
           event_version: 2,
-          event_level: 3,
+          process_type: :durable,
           payload: { "total" => 99 },
           metadata: { "source" => "web" },
           idempotency_key: "abc",
@@ -28,7 +28,7 @@ module EventEngine
         Recorder.new.call(event)
 
         attrs = StoredEvent.last.attributes.slice(
-          "event_name", "event_type", "event_version", "event_level",
+          "event_name", "event_type", "event_version", "process_type",
           "payload", "metadata", "idempotency_key",
           "aggregate_type", "aggregate_id", "aggregate_version"
         )
@@ -37,7 +37,7 @@ module EventEngine
             "event_name" => "order_placed",
             "event_type" => "domain",
             "event_version" => 2,
-            "event_level" => 3,
+            "process_type" => "durable",
             "payload" => { "total" => 99 },
             "metadata" => { "source" => "web" },
             "idempotency_key" => "abc",
