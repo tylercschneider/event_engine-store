@@ -24,3 +24,5 @@ group :development, :test do
   gem "pry"
   gem "minitest", "~> 5.0"
 end
+
+gem "the_local", github: "tylercschneider/the_local"
