@@ -1,9 +1,9 @@
 # EventEngine::Store
 
 The permanent, queryable **event record** for
-[EventEngine](https://github.com/tylercschneider/event_engine).
+[EventEngine](https://github.com/DYB-Development/event_engine).
 
-Where [`event_engine-delivery`](https://github.com/tylercschneider/event_engine-delivery)'s
+Where [`event_engine-delivery`](https://github.com/DYB-Development/event_engine-delivery)'s
 outbox is a *transient delivery buffer* (rows are deleted once published and the
 retention window passes), `event_engine-store` is the **durable source of truth**: an
 immutable, append-only event log the host application owns. It registers a handler
