@@ -19,10 +19,10 @@ gem "rubocop-rails-omakase", require: false
 
 group :development, :test do
   # The dummy app under test/dummy boots a full Rails app. The gem itself needs
-# only railties + activerecord — see the gemspec.
-gem "rails", ">= 7.1.6", "< 9"
+  # only railties + activerecord — see the gemspec.
+  gem "rails", ">= 7.1.6", "< 9"
 
-gem "puma"
+  gem "puma"
   gem "sqlite3"
   gem "propshaft"
   gem "pry"
