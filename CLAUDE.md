@@ -5,7 +5,6 @@ This project has installed expert subagents. Before doing work yourself,
 check whether a local owns it and delegate — never work from memory on
 something a local covers:
 
-- event_engine-* agents
 - the_local-* agents
 
 See each agent's description for specifics.
@@ -113,6 +112,8 @@ where touching more than the unit under test is expected and correct.
   tooling requires (e.g. `rubocop:disable`). Prefer refactoring over a "why" comment
   whenever you can.
 <!-- the_local:process:end -->
+
+
 
 
 
