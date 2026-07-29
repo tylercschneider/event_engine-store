@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.version     = EventEngine::Store::VERSION
   spec.authors     = [ "tylercschneider" ]
   spec.email       = [ "tylercschneider@gmail.com" ]
-  spec.homepage    = "https://github.com/tylercschneider/event_engine-store"
+  spec.homepage    = "https://github.com/DYB-Development/event_engine-store"
   spec.summary     = "Permanent, queryable event record for EventEngine"
   spec.description = "The durable record layer for EventEngine: an immutable, append-only event table the host owns, a handler that records every dispatched event, and event-sourcing replay. Depends on event_engine for event definitions."
   spec.license     = "MIT"
@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
   end
 
-  spec.add_dependency "rails", ">= 7.1.6", "< 9"
-  spec.add_dependency "event_engine"
+  spec.add_dependency "railties", ">= 7.1.6", "< 9"
+  spec.add_dependency "activerecord", ">= 7.1.6", "< 9"
+  spec.add_dependency "event_engine", ">= 0.2.1"
 end
