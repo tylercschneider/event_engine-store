@@ -37,6 +37,8 @@ module EventEngine
             event_type: "domain",
             event_version: 2,
             process_type: "durable",
+            subject: nil,
+            domain: nil,
             payload: { "total" => 99 },
             metadata: { "source" => "web" },
             idempotency_key: "abc",
